@@ -1,23 +1,14 @@
 # machine_learning
-Project to classify well performed exercise activities
+Briefly,
+I load the data into R and selected the variables containing raw data, which at the same excluded all those variables containing calculated data like for example kurtosis, skewness, averages or standard deviations. In total 48 out of the 160 variables were selected for the project.
 
-Classificating exercises using data from portable devices
-The goal of this project is to predict what exercise the volunteers are performing based on the data recorded by portable devices such as the reading of gyroscopes and accelerometers.
+Following I created a partition of the training set to build test set and build the model. I chose a random forest model with a cross validation applying the k-fold method: 10 times and 5 repetitions.
 
-The objective of the experiment was to assess how well a group of 6 volunteers performed a weight lifting exercise.</p>
-The 6 six male participants, aged between 20-28 years, selected for the study were asked to perform the same weight lifting exercise in 5 different manners:
-  - Exactly according to the specification (Class A)
-  - Throwing the elbows to the front (Class B)
-  - Lifting the dumbbell only halfway (Class C)
-  - lowering the dumbbell only halfway (Class D)
- - throwing the hips to the front (Class E)
+After that I tested the model predicting the cases in the sub-partition of the initial training set. The accuracy of the model was really low, smaller than 0.5, which is lower than a random selection, for which the model should be rejected. 
 
-The goal of this learning machine learning project is to classify the activity based on the data produced in this study.
-
-The erst of the information is in the rhtml file.
-
+The problem most probably was in the selection of the variables that must be repeated taking selecting a larger number of variables.
 
 Thanks,
-
 Raul 
+
 ----------------
