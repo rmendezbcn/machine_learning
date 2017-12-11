@@ -1,0 +1,75 @@
+---
+title: "machine_learning_project"
+author: "Raul Mendez-Vasquez"
+date: "12/11/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Classificating exercises using data from portable devices
+
+The goal of this project is to predict what exercise the volunteers are performing based on the data recorded by portable devices such as the reading of <b>gyroscopes</b> and <b>accelerometers</b>.
+<p>The objective of the experiment was to assess how well a group of 6 volunteers performed a weight lifting exercise.</p>
+<p>The 6 six male participants, aged between 20-28 years, selected for the study were asked to perform the same weight lifting exercise in 5 different manners:</p>
+  <li>Exactly according to the specification (Class A)</li> 
+  <li>Throwing the elbows to the front (Class B)</li>
+  <li>Lifting the dumbbell only halfway (Class C)</li>
+  <li>lowering the dumbbell only halfway (Class D)</li>
+  <li>throwing the hips to the front (Class E)</li>
+
+
+br
+<p>The goal of this learning machine learning project is to classify the activity based on the data produced in this study.</p>
+
+<h2>Methods</h2>
+<h3>Placement of the sensors</h3>
+<p>The sensors were placed on all the volunteers according to the schema shown below.</p>
+
+```{r echo=FALSE}
+library(png)
+knitr::include_graphics(path = "figure/on-body-sensing-schema.png")
+```
+
+<h3>Variable selections</h3>
+<p>The majority of the variables in the training data set consisted of calculated variables, and only few corresponded to the data produced by the sensors in the mobile devices.</p>
+<p>Only the variables containing raw data from the sensors were selected for this project. The selection was done using the grep function on the name of the variables<p>
+``` {r eval= FALSE}
+var_names <- names(intrain)
+selected_vars <- var_names[grep('^accel|^gyros|^magnet|^roll|^pitch|^yaw|^classe', var_names)]
+train_set <- subset(intrain, select = selected_vars)
+```
+<h3>Cross validation</h3>
+<p>The cross validation was performed applying the k-fold method: 10 times and 5 repetitions. </p>
+
+<h3>Model building</h3
+<p>A random forest was the model selected for the project. </p>
+``` {r eval = FALSE}
+control <- trainControl(method = "repeatedcv", repeats = 5)
+rfmodfit <- train(classe ~., data = train_set, method = "rpart", trControl = control)
+```
+
+<h2>Results</h2>
+<p>The class A (correct way of performing the exercise) was the main class in the resulting classification tree, and the "deviations" 
+from this class show up when different cutoff values were applied to the data. Thus, class A and class E (throwing the hips to the front) were split with the data from the belt; 
+the class B (throwing the elbows to the front) was identified using the “y” direction of the magnet dumbbell; and finally the class C (lifting the dumbbell only halfway) was split from the class A 
+whit sensor in the forearm. The resulting classification tree is shown in the following Figure.</p>
+``` {r echo = FALSE}
+knitr::include_graphics(path = "figure/class_tree_project.png")
+```
+
+<h2>Discussion</h2>
+<p>The resulting classification tree seems to be coherent with the idea that the exercises in classes B to E are deviations from the pattern observed in the class A, i.et. when performing the exercise in the correct way. 
+br
+
+
+
+
+
+
+
+
+
+
