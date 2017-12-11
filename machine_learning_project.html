@@ -1,0 +1,132 @@
+<html>
+
+<head>
+<style type="text/css">
+.knitr .inline {
+  background-color: #f7f7f7;
+  border:solid 1px #B0B0B0;
+}
+.error {
+	font-weight: bold;
+	color: #FF0000;
+}
+.warning {
+	font-weight: bold;
+}
+.message {
+	font-style: italic;
+}
+.source, .output, .warning, .error, .message {
+	padding: 0 1em;
+  border:solid 1px #F7F7F7;
+}
+.source {
+  background-color: #f5f5f5;
+}
+.rimage .left {
+  text-align: left;
+}
+.rimage .right {
+  text-align: right;
+}
+.rimage .center {
+  text-align: center;
+}
+.hl.num {
+  color: #AF0F91;
+}
+.hl.str {
+  color: #317ECC;
+}
+.hl.com {
+  color: #AD95AF;
+  font-style: italic;
+}
+.hl.opt {
+  color: #000000;
+}
+.hl.std {
+  color: #585858;
+}
+.hl.kwa {
+  color: #295F94;
+  font-weight: bold;
+}
+.hl.kwb {
+  color: #B05A65;
+}
+.hl.kwc {
+  color: #55aa55;
+}
+.hl.kwd {
+  color: #BC5A65;
+  font-weight: bold;
+}
+</style>
+<title>Classification project</title>
+</head>
+
+<body>
+<h1>Classificating exercises using data from portable devices</h1>
+<p>The goal of this project is to predict what exercise the volunteers are performing based on the data recorded by portable devices such as the reading of <b>gyroscopes</b> and <b>accelerometers</b>.<p>
+
+<p>The objective of the experiment was to assess how well a group of 6 volunteers performed a weight lifting exercise.</p>
+<p>The 6 six male participants, aged between 20-28 years, selected for the study were asked to perform the same weight lifting exercise in 5 different manners:</p>
+  <li>Exactly according to the specification (Class A)</li> 
+  <li>Throwing the elbows to the front (Class B)</li>
+  <li>Lifting the dumbbell only halfway (Class C)</li>
+  <li>lowering the dumbbell only halfway (Class D)</li>
+  <li>throwing the hips to the front (Class E)</li>
+br
+<p>The goal of this learning machine learning project is to classify the activity based on the data produced in this study.</p>
+
+<h2>Methods</h2>
+<h3>Placement of the sensors</h3>
+<p>The sensors were placed on all the volunteers according to the schema shown below.</p>
+<div class="chunk" id="opts_knit$set(upload.fun=image_uri)"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">library</span><span class="hl std">(png)</span>
+<span class="hl std">knitr</span><span class="hl opt">::</span><span class="hl kwd">include_graphics</span><span class="hl std">(</span><span class="hl kwc">path</span> <span class="hl std">=</span> <span class="hl str">&quot;figure/on-body-sensing-schema.png&quot;</span><span class="hl std">)</span>
+</pre></div>
+</div><div class="rimage default"><img src="figure/on-body-sensing-schema.png" title="plot of chunk opts_knit$set(upload.fun=image_uri)" alt="plot of chunk opts_knit$set(upload.fun=image_uri)" class="plot" /></div></div>
+
+<h3>Variable selections</h3>
+<p>The majority of the variables in the training data set consisted of calculated variables, and only few corresponded to the data produced by the sensors in the mobile devices.</p>
+<p>Only the variables containing raw data from the sensors were selected for this project. The selection was done using the grep function on the name of the variables<p>
+<div class="chunk" id="unnamed-chunk-1"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">var_names</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">names</span><span class="hl std">(intrain)</span>
+<span class="hl std">selected_vars</span> <span class="hl kwb">&lt;-</span> <span class="hl std">var_names[</span><span class="hl kwd">grep</span><span class="hl std">(</span><span class="hl str">'^accel|^gyros|^magnet|^roll|^pitch|^yaw|^classe'</span><span class="hl std">, var_names)]</span>
+<span class="hl std">train_set</span> <span class="hl kwb">&lt;-</span> <span class="hl kwd">subset</span><span class="hl std">(intrain,</span> <span class="hl kwc">select</span> <span class="hl std">= selected_vars)</span>
+</pre></div>
+</div></div>
+
+<h3>Cross validation</h3>
+<p>The cross validation was performed applying the k-fold method: 10 times and 5 repetitions. </p>
+
+<h3>Model building</h3
+<p>A random forest was the model selected for the project. </p>
+<div class="chunk" id="unnamed-chunk-2"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl com"># Cross validation applying k-fold method </span>
+<span class="hl std">control</span> <span class="hl kwb">=</span> <span class="hl kwd">trainControl</span><span class="hl std">(</span><span class="hl kwc">method</span> <span class="hl std">=</span> <span class="hl str">&quot;repeatedcv&quot;</span><span class="hl std">,</span> <span class="hl kwc">repeats</span> <span class="hl std">=</span> <span class="hl num">5</span><span class="hl std">)</span>
+
+<span class="hl com"># training two models: 1) random forest and 2) boosting </span>
+<span class="hl std">rfmodfit</span> <span class="hl kwb">=</span> <span class="hl kwd">train</span><span class="hl std">(classe</span> <span class="hl opt">~</span><span class="hl std">.,</span> <span class="hl kwc">data</span> <span class="hl std">= train_set,</span> <span class="hl kwc">method</span> <span class="hl std">=</span> <span class="hl str">&quot;rpart&quot;</span><span class="hl std">,</span> <span class="hl kwc">trControl</span> <span class="hl std">= control)</span>
+</pre></div>
+</div></div>
+
+<h2>Results</h2>
+<p>The class A (correct way of performing the exercise) was the main class in the resulting classification tree, and the "deviations" 
+from this class show up when different cutoff values were applied to the data. Thus, class A and class E (throwing the hips to the front) were split with the data from the belt; 
+the class B (throwing the elbows to the front) was identified using the “y” direction of the magnet dumbbell; and finally the class C (lifting the dumbbell only halfway) was split from the class A 
+whit sensor in the forearm. The resulting classification tree is shown in the following Figure.</p>
+<div class="chunk" id="unnamed-chunk-3"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl std">knitr</span><span class="hl opt">::</span><span class="hl kwd">include_graphics</span><span class="hl std">(</span><span class="hl kwc">path</span> <span class="hl std">=</span> <span class="hl str">&quot;figure/class_tree_project.png&quot;</span><span class="hl std">)</span>
+</pre></div>
+</div><div class="rimage default"><img src="figure/class_tree_project.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" class="plot" /></div></div>
+
+<h2>Discussion</h2>
+<p>The resulting classification tree seems to be coherent with the idea that the exercises in classes B to E are deviations from the pattern observed in the class A, i.et. when performing the exercise in the correct way. 
+br
+br
+br
+
+
+
+
+</body>
+</html>
