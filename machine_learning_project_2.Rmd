@@ -57,7 +57,7 @@ from this class show up when different cutoff values were applied to the data. T
 the class B (throwing the elbows to the front) was identified using the “y” direction of the magnet dumbbell; and finally the class C (lifting the dumbbell only halfway) was split from the class A 
 whit sensor in the forearm. The resulting classification tree is shown in the following Figure.</p>
 ``` {r echo = FALSE}
-knitr::include_graphics(path = "figure/class_tree_project.png")
+knitr::include_graphics(path = "/machine_learning/class_tree_project.png")
 ```
 
 <h2>Discussion</h2>
