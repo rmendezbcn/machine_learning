@@ -72,18 +72,13 @@ boost_modfit <- train(classe ~., method = 'gbm', data = train_set, verbose = FAL
 ``` {r eval = FALSE}
 boost_pred <- predict(boost_modfit, newdata = test_set)
 ```
-```{r }
+```{r eval = FALSE}
 table(boost_pred, test_set$classe)
-```
-```{r}
 confusionMatrix(boost_pred, test_set$classe)$overall[1]
 ```
 
 <p>The accuracy of the model was 95.6% and the kappa 0.944, a value close to the accuracy of the model, suggesting 
 that it willsuccessfully predict the outcome in a large proportion of new cases.</p> 
-``` {r echo = FALSE}
-knitr::include_graphics(path = "figure/class_tree_project.png")
-```
 
 <h2>Discussion</h2>
 <p>The accuracy of the boosting algorithm was greater than the accuracy of the decision tree algorithm built in the previous experiment. It is important noticing that in both cases the same subset of variables were used to build the models.
@@ -102,13 +97,3 @@ final <- predict(boost_modfit, test_set)
 
 
 br
-
-
-
-
-
-
-
-
-
-
