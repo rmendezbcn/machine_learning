@@ -1,0 +1,114 @@
+---
+title: "machine_learning_project"
+author: "Raul Mendez-Vasquez"
+date: "12/11/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Classificating exercises using data from portable devices
+
+The goal of this project is to predict what exercise the volunteers are performing based on the data recorded by portable devices such as <b>gyroscopes</b> and <b>accelerometers</b>.
+<p>The objective of the experiment was to assess how well 'weight lifting exercises' are performed by a group of 6 volunteers.</p>
+<p>The 6 six male participants, aged between 20-28 years, selected for the study were asked to perform the same weight lifting exercise in 5 different manners:</p>
+  <li>Exactly according to the specification (Class A)</li> 
+  <li>Throwing the elbows to the front (Class B)</li>
+  <li>Lifting the dumbbell only halfway (Class C)</li>
+  <li>lowering the dumbbell only halfway (Class D)</li>
+  <li>throwing the hips to the front (Class E)</li>
+
+
+br
+<p>The goal of this learning machine project is to classify the activity in the classes mentioned above based on the data produced in this study.</p>
+
+<h2>Methods</h2>
+<h3>Placement of the sensors</h3>
+<p>The sensors were placed on all the volunteers according to the schema shown below.</p>
+
+```{r echo=FALSE}
+library(png)
+knitr::include_graphics(path = "figure/on-body-sensing-schema.png")
+```
+
+<h3>Variable selections</h3>
+<p>The majority of the variables in the training data set consisted of calculated variables, and only few corresponded to the data produced by the sensors in the mobile devices.</p>
+<p>Only the variables containing raw data from the sensors were selected for this project. The selection was done using the grep function on the name of the variables<p>
+``` {r eval= FALSE}
+# Reading in the training data set 
+intrain0 <- fread('pml-training.csv')
+# selecting only the variables containing raw data
+var_names <- names(intrain0)
+selected_vars <- var_names[grep('^accel|^gyros|^magnet|^roll|^pitch|^yaw|^classe', var_names)]
+train_set <- subset(intrain, select = selected_vars)
+```
+<p>Further, the data set was checked for near to cero variance variables to exclude them form the model.
+
+```{r eval =0 FALSE}
+# Explore whether the data set still have near zero variance variables
+near_zero_vars <- nearZeroVar(intrain, saveMetrics = TRUE)
+near_zero_vars[near_zero_vars$nzv == "TRUE",]
+```
+
+<h3>Model building</h3
+Two partitions were created to enable testing the model. The cross validation was performed testing the 
+model fitted with the training subdata set.
+``` {r eval= FALSE}
+intrain_set <- createDataPartition(y = intrain$classe, p = 0.6, list = FALSE) 
+train_set <- intrain[ intrain_set, ]
+test_set <- intrain[-intrain_set, ]
+```
+
+<p>The algortihm chose for this project was random forest given its high accuracy. However, fitting this model required toomuch 
+computing power, so a Boosting algorithm was finally aused.</p>
+``` {r eval = FALSE}
+boost_modfit <- train(classe ~., method = 'gbm', data = train_set, verbose = FALSE)
+```
+<h2>Results</h2>
+<h3>Testing the model</h3>
+<p>The model was tested using the sub-partition "test_set" created from the initial training data set.</p>
+``` {r eval = FALSE}
+boost_pred <- predict(boost_modfit, newdata = test_set)
+```
+```{r }
+table(boost_pred, test_set$classe)
+```
+```{r}
+confusionMatrix(boost_pred, test_set$classe)$overall[1]
+```
+
+<p>The accuracy of the model was 95.6% and the kappa 0.944, a value close to the accuracy of the model, suggesting 
+that it willsuccessfully predict the outcome in a large proportion of new cases.</p> 
+``` {r echo = FALSE}
+knitr::include_graphics(path = "figure/class_tree_project.png")
+```
+
+<h2>Discussion</h2>
+<p>The accuracy of the boosting algorithm was greater than the accuracy of the decision tree algorithm built in the previous experiment. It is important noticing that in both cases the same subset of variables were used to build the models.
+
+<h2>Classification of the test data set<h2>
+<p> Reading in the actual test data set.</p>
+```{r eval = FALSE}
+# reading in the test data set
+test_set <- fread('pml-testing.csv')
+```
+<p> Predicting the new cases.<p>
+```{r eval = FALSE}
+# predicting using the models built above
+final <- predict(boost_modfit, test_set)
+```
+
+
+br
+
+
+
+
+
+
+
+
+
+
