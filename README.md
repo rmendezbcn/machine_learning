@@ -2,12 +2,14 @@
 Second attemp ------------------
 
 Dear Classmates,
+
 I built a new model using the boosting algorithm (with the default options) in trying to improve the accuracy of the previous model based on a decision tree. 
-The model was built using the same subset of variables (those containing raw data only) and showed an accuracy of 95,6% and a Kappa index of 0.944, suggesting that the model would succed in predicting new cases.
+The model was built using the same subset of variables (those containing raw data only) and showed an accuracy of 95,6% and a Kappa index of 0.944, suggesting that the model would succeed in predicting new cases.
 
 The code and explanation of the model are in the Rmd (version 3) file and also in the R file.
 
 Thanks,
+
 Raul 
 
 
